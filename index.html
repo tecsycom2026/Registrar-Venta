@@ -47,7 +47,36 @@ dialog form{display:flex;flex-direction:column;max-height:88vh}
 #mgrL li button{width:42px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer;font-size:16px}
 #mgrL .vacio{color:#607080;font-size:13.5px}
 .dz{padding:10px 16px 14px;text-align:right}
-@media (max-width:520px){main{padding:8px 6px 0}.panel{padding:8px 10px 0}.grid{grid-template-columns:1fr}}
+
+.dash{display:none;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px 16px;margin:12px 0}
+.dash.on{display:block}
+.dh2{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dh2 h2{margin:0;font-size:18px}.dh2 span{font-size:12.5px;color:#607080;flex:1}
+.dh2 button,.fbt button,.pg button{padding:8px 14px;border:1px solid var(--line);border-radius:6px;background:#f6f9fb;font:inherit;font-size:14px;cursor:pointer;color:var(--ink)}
+.dash h3{margin:20px 0 8px;font-size:15.5px}
+.flt{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:2px 12px;align-items:end;margin-top:6px}
+.fbt{display:flex;gap:6px;padding-top:9px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin:14px 0 10px}
+.kp{border:1px solid var(--line);border-top:4px solid var(--teal);border-radius:8px;padding:8px 10px;background:#fafcfd}
+.kp b{display:block;font-size:24px;line-height:1.1}.kp span{font-size:12.5px;color:#4a6175}
+.sb{display:flex;height:16px;border-radius:8px;overflow:hidden;background:#e4eaef;min-width:110px}
+.sb i{display:block;height:100%}
+.lg{display:flex;flex-wrap:wrap;gap:4px 14px;margin:6px 0 0;font-size:12.5px}
+.lg em{font-style:normal;display:inline-flex;align-items:center;gap:5px}
+.lg em:before{content:'';width:10px;height:10px;border-radius:50%;background:var(--c)}
+.tw{overflow:auto;max-height:430px;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:7px 10px;border-bottom:1px solid #e6ecf0;text-align:left;white-space:nowrap}
+th{position:sticky;top:0;background:#e9eff3;z-index:1;font-size:12.5px}
+th.n,td.n{text-align:right}
+td.bar{min-width:170px}
+tbody tr:hover{background:#f3f8fa}
+tfoot td{font-weight:700;background:#f1f5f8;position:sticky;bottom:0}
+td.vacio{color:#607080;text-align:center;padding:18px}
+.bd{color:#fff;border-radius:10px;padding:2px 9px;font-size:12px;font-weight:600}
+.pg{display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:8px;font-size:13px}
+.pg button:disabled{opacity:.5;cursor:default}
+@media (max-width:520px){main{padding:8px 6px 0}.panel{padding:8px 10px 0}.grid{grid-template-columns:1fr}.dash{padding:10px}}
 </style>
 </head>
 <body>
@@ -78,6 +107,25 @@ dialog form{display:flex;flex-direction:column;max-height:88vh}
       <button id="p1res">Resumen</button>
       <button id="p1upd">Actualizar caché</button>
     </div>
+  </section>
+
+  <section class="dash" id="p1dash">
+    <div class="dh2"><h2>Panel de registros</h2><span id="regSt">⏳ Cargando registros...</span><button id="regUpd">Actualizar</button></div>
+    <div class="flt">
+      <div class="fld"><label for="fDesde">Desde</label><input type="date" id="fDesde"></div>
+      <div class="fld"><label for="fHasta">Hasta</label><input type="date" id="fHasta"></div>
+      <div class="fld"><label for="fAsesor">Asesor</label><select id="fAsesor"></select></div>
+      <div class="fld"><label for="fEstado">Estado</label><select id="fEstado"></select></div>
+      <div class="fld"><label for="fQ">Buscar</label><input id="fQ" placeholder="Documento, cliente, distrito..." autocomplete="off"></div>
+      <div class="fbt"><button id="fHoy">Hoy</button><button id="fClr">Limpiar</button></div>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div id="gbar"></div>
+    <h3>Registros</h3>
+    <div class="tw"><table id="tReg"></table></div>
+    <div class="pg"><button id="pgP">‹ Anterior</button><span id="pgI"></span><button id="pgN">Siguiente ›</button></div>
+    <h3>Ventas por asesor</h3>
+    <div class="tw"><table id="tAse"></table></div>
   </section>
 
   <section class="panel" id="p2">
@@ -148,8 +196,9 @@ function build(pref, fields) {
 build('p1', F1); build('p2', F2);
 ['p1doc','p2doc'].forEach(id => $(id).addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); }));
 document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
-  document.querySelectorAll('.tabs button,.panel').forEach(x => x.classList.remove('on'));
-  b.classList.add('on'); $(b.dataset.tab).classList.add('on'); });
+  document.querySelectorAll('.tabs button,.panel,.dash').forEach(x => x.classList.remove('on'));
+  b.classList.add('on'); $(b.dataset.tab).classList.add('on');
+  const dd = $(b.dataset.tab + 'dash'); if (dd) dd.classList.add('on'); });
 
 /* ====== LISTAS EDITABLES: ASESORES Y TÉCNICOS (persistentes) ====== */
 const LS = 'cc_listas_v1';
@@ -251,11 +300,11 @@ const selVal = k => { const v = $(SEL[k]).value; return v === '__add__' ? '' : v
 $('p1reg').onclick = async () => {
   const dni = val('p1doc');
   if (!dni) { toast('El DNI/RUC es obligatorio', true); return; }
-  // Columnas A-L iguales a la app Python; TEC se agrega al final (columna M) para no mover nada
+  // Columnas A-L iguales a la app Python; TEC va en la columna M; N queda libre para el ESTADO
   const fila = [dni, val('p1tipo'), val('p1nombre'), val('p1celular'), val('p1correo'), val('p1direccion'),
     val('p1departamento'), val('p1provincia'), val('p1distrito'), val('p1coord'), selVal('asesores'), ahora(), selVal('tecnicos')];
   const b = $('p1reg'); b.disabled = true; b.textContent = 'Guardando...';
-  try { await apiPost({ action: 'registrar', fila }); toast('✓ Venta registrada'); clearAllP1(); }
+  try { await apiPost({ action: 'registrar', fila }); toast('✓ Venta registrada'); clearAllP1(); cargarReg(); }
   catch (e) { toast('Error: ' + e.message, true); }
   b.disabled = false; b.textContent = 'Registrar (venta)';
 };
@@ -332,9 +381,83 @@ if (P2_REGISTRAR) {           // misma fila que guardar_datos_p2() de la app Pyt
   };
 }
 
+/* ====== PANEL DE REGISTROS (hoja REGISTRO) ====== */
+// Columnas de la hoja: A doc, B tipo, C nombre, D celular, E correo, F dirección, G dpto, H provincia,
+// I distrito, J coord, K asesor, L fecha, M tec, N estado
+const ORD = [11,0,1,2,3,4,5,6,7,8,9,10,12,13];
+const HD  = ['N°','Fecha','Documento','Tipo','Cliente','Celular','Correo','Dirección','Dpto','Provincia','Distrito','Coord X/Y','Asesor','Tec','Estado'];
+const FIJOS = {FINALIZADO:'#2e7d32',INSTALADO:'#2e7d32',ATENDIDO:'#2e7d32',VALIDADO:'#2e7d32',PENDIENTE:'#e0a100',PROGRAMADO:'#1d4ed8',
+               CANCELADO:'#b71c1c',AUSENTE:'#800000','SIN ESTADO':'#8b9aa7'};
+const PAL = ['#0f7f86','#7c3aed','#c2410c','#0891b2','#be185d','#65a30d','#5b6dd6','#a16207'];
+const cEst = {};
+const colEst = e => FIJOS[e] || cEst[e] || (cEst[e] = PAL[Object.keys(cEst).length % PAL.length]);
+const badge = e => `<span class="bd" style="background:${colEst(e)}">${esc(e)}</span>`;
+const bar = (o, t, ord) => '<div class="sb">' + ord.map(e => `<i style="width:${t ? (o[e] || 0) * 100 / t : 0}%;background:${colEst(e)}" title="${esc(e)}: ${o[e] || 0}"></i>`).join('') + '</div>';
+const pf = s => { const m = /(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(s || ''); return m ? new Date(+m[3], +m[2] - 1, +m[1]) : null; };
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+let REG = [], pag = 0; const PS = 100;
+
+async function cargarReg() {
+  try {
+    $('regSt').textContent = '⏳ Cargando registros...';
+    const d = await apiGet('registros');
+    REG = d.map((a, i) => { a = a.slice(0, 14); while (a.length < 14) a.push('');
+      return { n: i + 1, a, as: (a[10] || '').trim().toUpperCase() || 'SIN ASESOR', es: (a[13] || '').trim().toUpperCase() || 'SIN ESTADO',
+               f: pf(a[11]), txt: a.join(' ').toUpperCase() }; }).reverse();      // más recientes primero
+    poblarFiltros(); render();
+    const h = new Date();
+    $('regSt').textContent = `✓ ${REG.length.toLocaleString()} registros · actualizado ${String(h.getHours()).padStart(2,'0')}:${String(h.getMinutes()).padStart(2,'0')}`;
+  } catch (e) { $('regSt').textContent = '✗ Error al cargar registros: ' + e.message; toast('Error registros: ' + e.message, true); }
+}
+function poblarFiltros() {
+  const llenar = (id, key, todos) => { const s = $(id), cur = s.value;
+    const u = [...new Set(REG.map(r => r[key]))].sort();
+    s.innerHTML = `<option value="">${todos}</option>` + u.map(x => `<option>${esc(x)}</option>`).join('');
+    s.value = u.includes(cur) ? cur : ''; };
+  llenar('fAsesor', 'as', 'Todos'); llenar('fEstado', 'es', 'Todos');
+}
+function filtrar() {
+  const d = $('fDesde').value ? new Date($('fDesde').value + 'T00:00:00') : null;
+  const h = $('fHasta').value ? new Date($('fHasta').value + 'T00:00:00') : null;
+  const a = $('fAsesor').value, e = $('fEstado').value, q = $('fQ').value.trim().toUpperCase();
+  return REG.filter(r => (!d || (r.f && r.f >= d)) && (!h || (r.f && r.f <= h)) && (!a || r.as === a) && (!e || r.es === e) && (!q || r.txt.includes(q)));
+}
+function render() {
+  const F = filtrar(), est = {}, ase = {}, h0 = new Date(); h0.setHours(0,0,0,0); let hoy = 0;
+  F.forEach(r => { est[r.es] = (est[r.es] || 0) + 1;
+    const x = ase[r.as] || (ase[r.as] = { t: 0, e: {} }); x.t++; x.e[r.es] = (x.e[r.es] || 0) + 1;
+    if (r.f && r.f.getTime() === h0.getTime()) hoy++; });
+  const ests = Object.keys(est).sort((a, b) => est[b] - est[a]), n = F.length;
+  $('kpis').innerHTML = `<div class="kp"><b>${n.toLocaleString()}</b><span>Registros</span></div><div class="kp"><b>${hoy}</b><span>Hoy</span></div><div class="kp"><b>${Object.keys(ase).length}</b><span>Asesores</span></div>`
+    + ests.map(e => `<div class="kp" style="border-top-color:${colEst(e)}"><b>${est[e]}</b><span>${esc(e)}</span></div>`).join('');
+  $('gbar').innerHTML = bar(est, n, ests) + '<div class="lg">' + ests.map(e => `<em style="--c:${colEst(e)}">${esc(e)}: ${est[e]} (${(est[e]*100/n).toFixed(0)}%)</em>`).join('') + '</div>';
+
+  // tabla de registros (paginada)
+  const pages = Math.max(1, Math.ceil(n / PS)); if (pag >= pages) pag = pages - 1;
+  const ini = pag * PS, sl = F.slice(ini, ini + PS);
+  $('tReg').innerHTML = '<thead><tr>' + HD.map(x => `<th>${x}</th>`).join('') + '</tr></thead><tbody>'
+    + (sl.map(r => `<tr><td>${r.n}</td>` + ORD.map(i => i === 13 ? `<td>${badge(r.es)}</td>` : `<td>${esc(r.a[i])}</td>`).join('') + '</tr>').join('')
+       || `<tr><td class="vacio" colspan="${HD.length}">Sin registros para los filtros elegidos.</td></tr>`) + '</tbody>';
+  $('pgI').textContent = n ? `${ini + 1}–${Math.min(ini + PS, n)} de ${n.toLocaleString()}` : '0 registros';
+  $('pgP').disabled = pag === 0; $('pgN').disabled = pag >= pages - 1;
+
+  // tabla por asesor con barra de estado
+  const ases = Object.keys(ase).sort((a, b) => ase[b].t - ase[a].t);
+  $('tAse').innerHTML = '<thead><tr><th>Asesor</th><th class="n">Total</th>' + ests.map(e => `<th class="n">${badge(e)}</th>`).join('') + '<th>Barra de estado</th></tr></thead><tbody>'
+    + (ases.map(a => `<tr><td>${esc(a)}</td><td class="n"><b>${ase[a].t}</b></td>` + ests.map(e => `<td class="n">${ase[a].e[e] || '–'}</td>`).join('') + `<td class="bar">${bar(ase[a].e, ase[a].t, ests)}</td></tr>`).join('')
+       || `<tr><td class="vacio" colspan="${ests.length + 3}">Sin datos.</td></tr>`)
+    + '</tbody>' + (ases.length ? '<tfoot><tr><td>Total</td><td class="n">' + n + '</td>' + ests.map(e => `<td class="n">${est[e]}</td>`).join('') + `<td class="bar">${bar(est, n, ests)}</td></tr></tfoot>` : '');
+}
+['fDesde','fHasta','fAsesor','fEstado'].forEach(id => $(id).addEventListener('change', () => { pag = 0; render(); }));
+$('fQ').addEventListener('input', () => { pag = 0; render(); });
+$('fHoy').onclick = () => { $('fDesde').value = $('fHasta').value = iso(new Date()); pag = 0; render(); };
+$('fClr').onclick = () => { ['fDesde','fHasta','fAsesor','fEstado','fQ'].forEach(id => $(id).value = ''); pag = 0; render(); };
+$('pgP').onclick = () => { pag--; render(); }; $('pgN').onclick = () => { pag++; render(); };
+$('regUpd').onclick = cargarReg;
+
 /* ====== INICIO ====== */
 if (API_URL.startsWith('PEGA_')) setStatus('⚠ Falta configurar API_URL en index.html', '#c62828');
-else { cargarP1(); cargarP2(); cargarListas(); }
+else { cargarP1(); cargarP2(); cargarListas(); cargarReg(); }
 </script>
 </body>
 </html>
