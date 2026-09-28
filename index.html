@@ -6,30 +6,48 @@
 <title>Call Center Consulta | Operativo Tecsycom</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2310263b'/%3E%3Cpath d='M14 36v-4a18 18 0 0 1 36 0v4' fill='none' stroke='%23fff' stroke-width='4'/%3E%3Crect x='9' y='34' width='9' height='15' rx='4' fill='%23f2a900'/%3E%3Crect x='46' y='34' width='9' height='15' rx='4' fill='%23f2a900'/%3E%3Cpath d='M50 49q0 8-14 8' fill='none' stroke='%23fff' stroke-width='3'/%3E%3Ccircle cx='31' cy='29' r='6.5' fill='none' stroke='%23fff' stroke-width='3'/%3E%3Cpath d='M36 34l6 6' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
-:root{--ink:#10263b;--teal:#0f7f86;--bg:#eef2f5;--card:#fff;--line:#cfd8df;--amber:#f2a900;--ok:#2e7d32;--err:#c62828}
+:root{--ink:#10263b;--teal:#0f7f86;--bg:#eef2f5;--card:#fff;--line:#cfd8df;--amber:#f2a900;--err:#c62828}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header{background:var(--ink);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px}
-header svg{width:44px;height:44px;flex:none}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;min-height:100vh}
+header{background:var(--ink);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:12px}
+header svg{width:42px;height:42px;flex:none}
 header h1{font-size:19px;margin:0;font-weight:700}
 header p{margin:0;font-size:12.5px;opacity:.75}
-main{max-width:520px;margin:0 auto;padding:12px}
+main{flex:1;width:100%;display:flex;flex-direction:column;padding:10px 12px 0}
 .tabs{display:flex;gap:4px}
-.tabs button{flex:1;padding:10px 6px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:#dde5ea;color:var(--ink);font-weight:600;cursor:pointer}
-.tabs button.on{background:var(--card);border-color:var(--line);box-shadow:inset 0 3px 0 var(--teal)}
-.panel{display:none;background:var(--card);border:1px solid var(--line);border-radius:0 0 10px 10px;padding:12px 14px 16px}
-.panel.on{display:block}
-#status{font-size:12.5px;color:#607080;margin:0 0 6px;min-height:18px}
+.tabs button{flex:1;padding:11px 6px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:#dde5ea;color:var(--ink);font:inherit;font-weight:600;cursor:pointer}
+.tabs button.on{background:var(--card);box-shadow:inset 0 3px 0 var(--teal)}
+.panel{display:none;flex:1;background:var(--card);border:1px solid var(--line);border-radius:0 0 10px 10px;padding:12px 14px 0}
+.panel.on{display:flex;flex-direction:column}
+#status{font-size:12.5px;color:#607080;margin:0 0 4px;min-height:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:2px 16px}
+.fld{min-width:0}
 label{display:block;margin:9px 0 3px;font-size:12.5px;font-weight:600;color:#3d5468}
-input,select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:6px;font:inherit;background:#fff;color:var(--ink)}
+input,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:6px;font:inherit;font-size:16px;background:#fff;color:var(--ink)}
 input:focus,select:focus,button:focus-visible{outline:2px solid var(--teal);outline-offset:1px}
-.btns{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr;gap:6px;margin-top:16px}
-.btns button{padding:10px 4px;border:1px solid var(--line);border-radius:6px;background:#f6f9fb;font:inherit;font-size:13px;cursor:pointer;color:var(--ink)}
+.lst{display:flex;gap:6px}
+.lst select{flex:1;min-width:0}
+.ico{flex:none;width:42px;border:1px solid var(--line);border-radius:6px;background:#f6f9fb;font-size:17px;cursor:pointer;color:var(--ink)}
+.btns{position:sticky;bottom:0;background:var(--card);margin-top:auto;padding:14px 0 12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.btns button{padding:12px 6px;border:1px solid var(--line);border-radius:6px;background:#f6f9fb;font:inherit;font-size:14px;cursor:pointer;color:var(--ink)}
 .btns button.main{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:700}
-.btns button.act{background:var(--amber);border-color:var(--amber)}
 .btns button:disabled{opacity:.55;cursor:wait}
-#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:8px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%}
+[hidden]{display:none!important}
+#toast{position:fixed;left:50%;bottom:74px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:8px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%;z-index:9}
 #toast.show{opacity:1}#toast.bad{background:var(--err)}
+dialog{border:0;border-radius:12px;padding:0;width:min(440px,94vw);max-height:88vh;color:var(--ink)}
+dialog::backdrop{background:rgba(16,38,59,.55)}
+dialog form{display:flex;flex-direction:column;max-height:88vh}
+.dh{padding:14px 16px 6px;font-weight:700;font-size:17px}
+.add{display:flex;gap:6px;padding:6px 16px 10px}
+.add button,.dz button{padding:10px 14px;border:1px solid var(--teal);background:var(--teal);color:#fff;border-radius:6px;font:inherit;cursor:pointer}
+#mgrL{list-style:none;margin:0;padding:0 16px;overflow:auto;flex:1}
+#mgrL li{display:flex;gap:6px;margin-bottom:6px}
+#mgrL li button{width:42px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer;font-size:16px}
+#mgrL .vacio{color:#607080;font-size:13.5px}
+.dz{padding:10px 16px 14px;text-align:right}
+@media (max-width:520px){main{padding:8px 6px 0}.panel{padding:8px 10px 0}.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -45,14 +63,17 @@ input:focus,select:focus,button:focus-visible{outline:2px solid var(--teal);outl
 
   <section class="panel on" id="p1">
     <p id="status">⏳ Cargando datos...</p>
-    <label for="p1doc">Ingrese DOC/RUC</label><input id="p1doc" inputmode="numeric" autocomplete="off">
-    <label for="p1tipo">Tipo de documento</label>
-    <select id="p1tipo"><option value=""></option><option>DNI</option><option>CEX</option><option>RUC</option></select>
-    <div id="p1f"></div>
-    <label for="p1asesor">Asesor</label>
-    <select id="p1asesor"><option value=""></option><option>IRMA CRISTOBAL </option><option>FLOR DE MARIA TORERO </option><option>JHOSTYN FRANCISCO </option><option>JHONNY ABURTO </option><option>YOSELIN SULCA </option></select>
+    <div class="grid">
+      <div class="fld"><label for="p1doc">Ingrese DOC/RUC</label><input id="p1doc" inputmode="numeric" autocomplete="off"></div>
+      <div class="fld"><label for="p1tipo">Tipo de documento</label>
+        <select id="p1tipo"><option value=""></option><option>DNI</option><option>CEX</option><option>RUC</option></select></div>
+      <span id="p1f" style="display:contents"></span>
+      <div class="fld"><label for="p1asesor">Asesor</label>
+        <div class="lst"><select id="p1asesor"></select><button type="button" class="ico" data-list="asesores" title="Editar lista de asesores">✎</button></div></div>
+      <div class="fld"><label for="p1tec">Tec</label>
+        <div class="lst"><select id="p1tec"></select><button type="button" class="ico" data-list="tecnicos" title="Editar lista de técnicos">✎</button></div></div>
+    </div>
     <div class="btns">
-      <button class="wake">Mantener activo</button>
       <button class="main" id="p1reg">Registrar (venta)</button>
       <button id="p1res">Resumen</button>
       <button id="p1upd">Actualizar caché</button>
@@ -60,28 +81,39 @@ input:focus,select:focus,button:focus-visible{outline:2px solid var(--teal);outl
   </section>
 
   <section class="panel" id="p2">
-    <label for="p2doc">Ingrese DOC/RUC</label><input id="p2doc" inputmode="numeric" autocomplete="off">
-    <div id="p2f"></div>
+    <div class="grid">
+      <div class="fld"><label for="p2doc">Ingrese DOC/RUC</label><input id="p2doc" inputmode="numeric" autocomplete="off"></div>
+      <span id="p2f" style="display:contents"></span>
+    </div>
     <div class="btns">
-      <button class="wake">Mantener activo</button>
-      <button id="p2reg" hidden>Registrar</button>
+      <button class="main" id="p2reg" hidden>Registrar</button>
       <button id="p2clr">Limpiar</button>
       <button id="p2res">Resumen</button>
       <button id="p2upd">Actualizar caché</button>
     </div>
   </section>
 </main>
+
+<dialog id="mgr">
+  <form method="dialog">
+    <div class="dh" id="mgrT">Lista</div>
+    <div class="add"><input id="mgrNew" placeholder="Nombre nuevo" autocomplete="off"><button type="button" id="mgrAdd">Agregar</button></div>
+    <ul id="mgrL"></ul>
+    <div class="dz"><button>Listo</button></div>
+  </form>
+</dialog>
 <div id="toast"></div>
 
 <script>
 /* ====== CONFIGURACIÓN ====== */
-const API_URL = 'https://script.google.com/macros/s/AKfycby3HBL4WPZBMHb4CmANkM9V_IAkyqoRWKFJ2puQQr77BFcRC6RGr0SIC0pZhutEekqrlw/exec';   // termina en /exec
-const TOKEN   = '11145024421f4c6ebf3668cd676a06eb48883d6f';                  // igual que en Code.gs
-const P2_REGISTRAR = false; // en la app Python, la pestaña empresarial no tiene botón de registro; pon true para activarlo
+const API_URL = 'https://script.google.com/macros/s/AKfycby3HBL4WPZBMHb4CmANkM9V_IAkyqoRWKFJ2puQQr77BFcRC6RGr0SIC0pZhutEekqrlw/exec';
+const TOKEN   = '11145024421f4c6ebf3668cd676a06eb48883d6f';   // igual que en Code.gs
+const P2_REGISTRAR = false; // la pestaña empresarial no tenía botón de registro en la app Python; true para activarlo
 
 /* ====== UTILIDADES ====== */
 const $ = id => document.getElementById(id);
 const val = id => $(id).value.trim();
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const setv = (id, v, lower) => { v = v || ''; $(id).value = lower ? v.toLowerCase() : v.toUpperCase(); };
 const ahora = () => { const d = new Date(), z = n => String(n).padStart(2, '0');
   return `${z(d.getDate())}/${z(d.getMonth()+1)}/${d.getFullYear()} ${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`; };
@@ -96,9 +128,9 @@ async function apiGet(action) {
   const r = await fetch(`${API_URL}?action=${action}&token=${encodeURIComponent(TOKEN)}`);
   const j = await r.json(); if (!j.ok) throw new Error(j.error); return j.data;
 }
-async function apiPost(fila) {
+async function apiPost(payload) {
   const r = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ token: TOKEN, action: 'registrar', fila }) });
+    body: JSON.stringify(Object.assign({ token: TOKEN }, payload)) });
   const j = await r.json(); if (!j.ok) throw new Error(j.error); return j;
 }
 
@@ -109,17 +141,81 @@ const F2 = [['cliente','Cliente'],['direccion','Dirección'],['celular','Celular
             ['fase1','1ra fase'],['fase2','2da fase'],['motivo','Motivo'],['detalle','Detalle de cancelación'],
             ['fval','Fecha validación'],['fprog','Fecha de programación']];
 function build(pref, fields) {
-  $(pref + 'f').innerHTML = fields.map(([k, l]) => `<label for="${pref}${k}">${l}</label><input id="${pref}${k}" autocomplete="off">`).join('');
-  fields.forEach(([k]) => { const el = $(pref + k);           // mayúsculas al escribir, conservando el cursor
+  $(pref + 'f').innerHTML = fields.map(([k, l]) => `<div class="fld"><label for="${pref}${k}">${l}</label><input id="${pref}${k}" autocomplete="off"></div>`).join('');
+  fields.forEach(([k]) => { const el = $(pref + k);
     el.addEventListener('input', () => { const p = el.selectionStart; el.value = el.value.toUpperCase(); el.setSelectionRange(p, p); }); });
 }
 build('p1', F1); build('p2', F2);
-$('p1doc').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
-$('p2doc').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
-
+['p1doc','p2doc'].forEach(id => $(id).addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); }));
 document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
   document.querySelectorAll('.tabs button,.panel').forEach(x => x.classList.remove('on'));
   b.classList.add('on'); $(b.dataset.tab).classList.add('on'); });
+
+/* ====== LISTAS EDITABLES: ASESORES Y TÉCNICOS (persistentes) ====== */
+const LS = 'cc_listas_v1';
+const DEF = {
+  asesores: ['IRMA CRISTOBAL','FLOR DE MARIA TORERO','JHOSTYN FRANCISCO','JHONNY ABURTO','YOSELIN SULCA'],
+  tecnicos: ['EDISON PAGAN','MARCO VALENCIA','EFRAIN TITO','JOEL MANUEL','JHON JAIMES','ERICK MORALES','LUIS CARRION','CARLOS ALBAN','JOSEP FABIAN','OMAR PALOMINO']
+};
+const SEL = { asesores: 'p1asesor', tecnicos: 'p1tec' };
+const TIT = { asesores: 'Lista de asesores', tecnicos: 'Lista de técnicos' };
+let LISTAS;
+try { LISTAS = JSON.parse(localStorage.getItem(LS)); } catch (e) {}
+if (!LISTAS || !Array.isArray(LISTAS.asesores) || !Array.isArray(LISTAS.tecnicos)) LISTAS = JSON.parse(JSON.stringify(DEF));
+
+const setSel = (k, v) => { const s = $(SEL[k]); s.value = v; s.dataset.prev = s.value; };
+function fillSelect(k) {
+  const s = $(SEL[k]), cur = s.value;
+  s.innerHTML = '<option value=""></option>' + LISTAS[k].map(n => `<option>${esc(n)}</option>`).join('') + '<option value="__add__">➕ Agregar nuevo…</option>';
+  setSel(k, LISTAS[k].includes(cur) ? cur : '');
+}
+async function guardarListas() {
+  try { localStorage.setItem(LS, JSON.stringify(LISTAS)); } catch (e) {}
+  try { await apiPost({ action: 'listas', data: LISTAS }); }
+  catch (e) { toast('Guardado solo en este equipo: ' + e.message, true); }
+}
+async function cargarListas() {
+  try { const d = await apiGet('listas');
+    if (d && Array.isArray(d.asesores) && Array.isArray(d.tecnicos)) {
+      LISTAS = d; try { localStorage.setItem(LS, JSON.stringify(LISTAS)); } catch (e) {}
+      fillSelect('asesores'); fillSelect('tecnicos'); }
+  } catch (e) { /* sin servidor: se usa la copia local */ }
+}
+let mgrKey = null;
+function renderMgr() {
+  $('mgrL').innerHTML = LISTAS[mgrKey].map((n, i) =>
+    `<li><input value="${esc(n)}" data-i="${i}" autocomplete="off"><button type="button" data-del="${i}" title="Eliminar">🗑</button></li>`).join('')
+    || '<li class="vacio">La lista está vacía. Agrega el primer nombre.</li>';
+}
+function abrirMgr(k) { mgrKey = k; $('mgrT').textContent = TIT[k]; $('mgrNew').value = ''; renderMgr(); $('mgr').showModal(); $('mgrNew').focus(); }
+function agregar() {
+  const v = $('mgrNew').value.trim().toUpperCase();
+  if (!v) return;
+  if (LISTAS[mgrKey].includes(v)) { toast('Ese nombre ya existe', true); return; }
+  LISTAS[mgrKey].push(v); fillSelect(mgrKey); setSel(mgrKey, v); renderMgr(); guardarListas();
+  $('mgrNew').value = ''; $('mgrNew').focus();
+}
+$('mgrAdd').onclick = agregar;
+$('mgrNew').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); agregar(); } });
+$('mgrL').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } });
+$('mgrL').addEventListener('change', e => {           // renombrar
+  const i = +e.target.dataset.i, old = LISTAS[mgrKey][i], v = e.target.value.trim().toUpperCase();
+  if (!v) { renderMgr(); return; }
+  if (v !== old && LISTAS[mgrKey].includes(v)) { toast('Ese nombre ya existe', true); renderMgr(); return; }
+  const eraSel = $(SEL[mgrKey]).value === old;
+  LISTAS[mgrKey][i] = v; fillSelect(mgrKey); if (eraSel) setSel(mgrKey, v); renderMgr(); guardarListas();
+});
+$('mgrL').addEventListener('click', e => {            // eliminar
+  const b = e.target.closest('[data-del]'); if (!b) return;
+  const i = +b.dataset.del;
+  if (!confirm(`¿Eliminar "${LISTAS[mgrKey][i]}" de la lista?`)) return;
+  LISTAS[mgrKey].splice(i, 1); fillSelect(mgrKey); renderMgr(); guardarListas();
+});
+document.querySelectorAll('[data-list]').forEach(b => b.onclick = () => abrirMgr(b.dataset.list));
+Object.keys(SEL).forEach(k => { fillSelect(k);
+  $(SEL[k]).addEventListener('change', e => {
+    if (e.target.value === '__add__') { e.target.value = e.target.dataset.prev || ''; abrirMgr(k); }
+    else e.target.dataset.prev = e.target.value; }); });
 
 /* ====== CACHÉS (en memoria, como en la app Python) ====== */
 let C1 = {}, C2 = {}, ok1 = false, ok2 = false;
@@ -149,15 +245,17 @@ function buscarP1() {
   }
 }
 $('p1doc').addEventListener('input', buscarP1);
-const clearAllP1 = () => { $('p1doc').value = ''; clearP1(); $('p1asesor').value = ''; };
+const clearAllP1 = () => { $('p1doc').value = ''; clearP1(); setSel('asesores', ''); setSel('tecnicos', ''); };
+const selVal = k => { const v = $(SEL[k]).value; return v === '__add__' ? '' : v.trim(); };
 
 $('p1reg').onclick = async () => {
   const dni = val('p1doc');
   if (!dni) { toast('El DNI/RUC es obligatorio', true); return; }
+  // Columnas A-L iguales a la app Python; TEC se agrega al final (columna M) para no mover nada
   const fila = [dni, val('p1tipo'), val('p1nombre'), val('p1celular'), val('p1correo'), val('p1direccion'),
-    val('p1departamento'), val('p1provincia'), val('p1distrito'), val('p1coord'), val('p1asesor'), ahora()];
+    val('p1departamento'), val('p1provincia'), val('p1distrito'), val('p1coord'), selVal('asesores'), ahora(), selVal('tecnicos')];
   const b = $('p1reg'); b.disabled = true; b.textContent = 'Guardando...';
-  try { await apiPost(fila); toast('✓ Venta registrada'); clearAllP1(); }
+  try { await apiPost({ action: 'registrar', fila }); toast('✓ Venta registrada'); clearAllP1(); }
   catch (e) { toast('Error: ' + e.message, true); }
   b.disabled = false; b.textContent = 'Registrar (venta)';
 };
@@ -174,7 +272,8 @@ DEPARTAMENTO: ${$('p1departamento').value}
 PROVINCIA: ${$('p1provincia').value}
 DISTRITO: ${$('p1distrito').value}
 COORDX/Y: ${$('p1coord').value}
-ASESOR: ${$('p1asesor').value}`);
+ASESOR: ${selVal('asesores')}
+TEC: ${selVal('tecnicos')}`);
   toast('Resumen copiado al portapapeles');
 };
 
@@ -228,29 +327,14 @@ if (P2_REGISTRAR) {           // misma fila que guardar_datos_p2() de la app Pyt
     const extra = `Cliente: ${$('p2cliente').value} | F1: ${$('p2fase1').value} | F2: ${$('p2fase2').value} | Val: ${$('p2fval').value}`;
     const fila = [doc, 'EMPRESARIAL', val('p2cliente'), val('p2celular'), val('p2direccion'), '', val('p2vendedor'),
       val('p2fase1'), val('p2fase2'), val('p2motivo'), val('p2detalle'), val('p2fval'), val('p2fprog'), `${fh} | ${extra}`];
-    try { await apiPost(fila); toast('✓ Venta empresarial registrada'); $('p2clr').click(); }
+    try { await apiPost({ action: 'registrar', fila }); toast('✓ Venta empresarial registrada'); $('p2clr').click(); }
     catch (e) { toast('Error: ' + e.message, true); }
   };
 }
 
-/* ====== MANTENER ACTIVO (la web no puede fijar la ventana; mantiene la pantalla encendida) ====== */
-let wake = null;
-document.querySelectorAll('.wake').forEach(b => b.onclick = async () => {
-  if (!('wakeLock' in navigator)) { toast('Tu navegador no permite mantener la pantalla activa', true); return; }
-  try {
-    if (wake) { await wake.release(); wake = null; document.querySelectorAll('.wake').forEach(x => x.classList.remove('act')); toast('Pantalla activa: desactivado'); }
-    else { wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release', () => wake = null);
-      document.querySelectorAll('.wake').forEach(x => x.classList.add('act')); toast('Pantalla activa: la pantalla no se apagará'); }
-  } catch (e) { toast('No se pudo activar: ' + e.message, true); }
-});
-document.addEventListener('visibilitychange', async () => {
-  if (document.visibilityState === 'visible' && document.querySelector('.wake.act') && !wake) {
-    try { wake = await navigator.wakeLock.request('screen'); } catch (e) {} }
-});
-
-/* ====== INICIO: cargar ambas cachés en segundo plano ====== */
+/* ====== INICIO ====== */
 if (API_URL.startsWith('PEGA_')) setStatus('⚠ Falta configurar API_URL en index.html', '#c62828');
-else { cargarP1(); cargarP2(); }
+else { cargarP1(); cargarP2(); cargarListas(); }
 </script>
 </body>
 </html>
