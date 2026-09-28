@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Call Center Consulta | Operativo Tecsycom</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2310263b'/%3E%3Cpath d='M14 36v-4a18 18 0 0 1 36 0v4' fill='none' stroke='%23fff' stroke-width='4'/%3E%3Crect x='9' y='34' width='9' height='15' rx='4' fill='%23f2a900'/%3E%3Crect x='46' y='34' width='9' height='15' rx='4' fill='%23f2a900'/%3E%3Cpath d='M50 49q0 8-14 8' fill='none' stroke='%23fff' stroke-width='3'/%3E%3Ccircle cx='31' cy='29' r='6.5' fill='none' stroke='%23fff' stroke-width='3'/%3E%3Cpath d='M36 34l6 6' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{--ink:#10263b;--teal:#0f7f86;--bg:#eef2f5;--card:#fff;--line:#cfd8df;--amber:#f2a900;--ok:#2e7d32;--err:#c62828}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:var(--ink);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px}
+header svg{width:44px;height:44px;flex:none}
+header h1{font-size:19px;margin:0;font-weight:700}
+header p{margin:0;font-size:12.5px;opacity:.75}
+main{max-width:520px;margin:0 auto;padding:12px}
+.tabs{display:flex;gap:4px}
+.tabs button{flex:1;padding:10px 6px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:#dde5ea;color:var(--ink);font-weight:600;cursor:pointer}
+.tabs button.on{background:var(--card);border-color:var(--line);box-shadow:inset 0 3px 0 var(--teal)}
+.panel{display:none;background:var(--card);border:1px solid var(--line);border-radius:0 0 10px 10px;padding:12px 14px 16px}
+.panel.on{display:block}
+#status{font-size:12.5px;color:#607080;margin:0 0 6px;min-height:18px}
+label{display:block;margin:9px 0 3px;font-size:12.5px;font-weight:600;color:#3d5468}
+input,select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:6px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--teal);outline-offset:1px}
+.btns{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr;gap:6px;margin-top:16px}
+.btns button{padding:10px 4px;border:1px solid var(--line);border-radius:6px;background:#f6f9fb;font:inherit;font-size:13px;cursor:pointer;color:var(--ink)}
+.btns button.main{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:700}
+.btns button.act{background:var(--amber);border-color:var(--amber)}
+.btns button:disabled{opacity:.55;cursor:wait}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:8px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90%}
+#toast.show{opacity:1}#toast.bad{background:var(--err)}
+</style>
+</head>
+<body>
+<header>
+  <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#1b3d5c"/><path d="M14 36v-4a18 18 0 0 1 36 0v4" fill="none" stroke="#fff" stroke-width="4"/><rect x="9" y="34" width="9" height="15" rx="4" fill="#f2a900"/><rect x="46" y="34" width="9" height="15" rx="4" fill="#f2a900"/><path d="M50 49q0 8-14 8" fill="none" stroke="#fff" stroke-width="3"/><circle cx="31" cy="29" r="6.5" fill="none" stroke="#fff" stroke-width="3"/><path d="M36 34l6 6" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>
+  <div><h1>Call Center Consulta</h1><p>Operativo Tecsycom | Registro de ventas</p></div>
+</header>
+<main>
+  <div class="tabs" role="tablist">
+    <button class="on" data-tab="p1">Venta operativo</button>
+    <button data-tab="p2">Venta empresarial</button>
+  </div>
+
+  <section class="panel on" id="p1">
+    <p id="status">⏳ Cargando datos...</p>
+    <label for="p1doc">Ingrese DOC/RUC</label><input id="p1doc" inputmode="numeric" autocomplete="off">
+    <label for="p1tipo">Tipo de documento</label>
+    <select id="p1tipo"><option value=""></option><option>DNI</option><option>CEX</option><option>RUC</option></select>
+    <div id="p1f"></div>
+    <label for="p1asesor">Asesor</label>
+    <select id="p1asesor"><option value=""></option><option>IRMA CRISTOBAL </option><option>FLOR DE MARIA TORERO </option><option>JHOSTYN FRANCISCO </option><option>JHONNY ABURTO </option><option>YOSELIN SULCA </option></select>
+    <div class="btns">
+      <button class="wake">Mantener activo</button>
+      <button class="main" id="p1reg">Registrar (venta)</button>
+      <button id="p1res">Resumen</button>
+      <button id="p1upd">Actualizar caché</button>
+    </div>
+  </section>
+
+  <section class="panel" id="p2">
+    <label for="p2doc">Ingrese DOC/RUC</label><input id="p2doc" inputmode="numeric" autocomplete="off">
+    <div id="p2f"></div>
+    <div class="btns">
+      <button class="wake">Mantener activo</button>
+      <button id="p2reg" hidden>Registrar</button>
+      <button id="p2clr">Limpiar</button>
+      <button id="p2res">Resumen</button>
+      <button id="p2upd">Actualizar caché</button>
+    </div>
+  </section>
+</main>
+<div id="toast"></div>
+
+<script>
+/* ====== CONFIGURACIÓN ====== */
+const API_URL = 'PEGA_AQUI_LA_URL_DE_APPS_SCRIPT';   // termina en /exec
+const TOKEN   = 'CAMBIA-ESTE-TOKEN';                  // igual que en Code.gs
+const P2_REGISTRAR = false; // en la app Python, la pestaña empresarial no tiene botón de registro; pon true para activarlo
+
+/* ====== UTILIDADES ====== */
+const $ = id => document.getElementById(id);
+const val = id => $(id).value.trim();
+const setv = (id, v, lower) => { v = v || ''; $(id).value = lower ? v.toLowerCase() : v.toUpperCase(); };
+const ahora = () => { const d = new Date(), z = n => String(n).padStart(2, '0');
+  return `${z(d.getDate())}/${z(d.getMonth()+1)}/${d.getFullYear()} ${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`; };
+let tt;
+function toast(msg, bad) { const t = $('toast'); t.textContent = msg; t.className = 'show' + (bad ? ' bad' : '');
+  clearTimeout(tt); tt = setTimeout(() => t.className = '', 3200); }
+async function copiar(txt) {
+  try { await navigator.clipboard.writeText(txt); }
+  catch (e) { const a = document.createElement('textarea'); a.value = txt; document.body.appendChild(a); a.select(); document.execCommand('copy'); a.remove(); }
+}
+async function apiGet(action) {
+  const r = await fetch(`${API_URL}?action=${action}&token=${encodeURIComponent(TOKEN)}`);
+  const j = await r.json(); if (!j.ok) throw new Error(j.error); return j.data;
+}
+async function apiPost(fila) {
+  const r = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ token: TOKEN, action: 'registrar', fila }) });
+  const j = await r.json(); if (!j.ok) throw new Error(j.error); return j;
+}
+
+/* ====== FORMULARIOS ====== */
+const F1 = [['nombre','Nombre del cliente'],['celular','Celular'],['correo','Correo'],['direccion','Dirección'],
+            ['departamento','Departamento'],['provincia','Provincia'],['distrito','Distrito'],['coord','Coord X/Y']];
+const F2 = [['cliente','Cliente'],['direccion','Dirección'],['celular','Celular'],['vendedor','Vendedor'],
+            ['fase1','1ra fase'],['fase2','2da fase'],['motivo','Motivo'],['detalle','Detalle de cancelación'],
+            ['fval','Fecha validación'],['fprog','Fecha de programación']];
+function build(pref, fields) {
+  $(pref + 'f').innerHTML = fields.map(([k, l]) => `<label for="${pref}${k}">${l}</label><input id="${pref}${k}" autocomplete="off">`).join('');
+  fields.forEach(([k]) => { const el = $(pref + k);           // mayúsculas al escribir, conservando el cursor
+    el.addEventListener('input', () => { const p = el.selectionStart; el.value = el.value.toUpperCase(); el.setSelectionRange(p, p); }); });
+}
+build('p1', F1); build('p2', F2);
+$('p1doc').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
+$('p2doc').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
+
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tabs button,.panel').forEach(x => x.classList.remove('on'));
+  b.classList.add('on'); $(b.dataset.tab).classList.add('on'); });
+
+/* ====== CACHÉS (en memoria, como en la app Python) ====== */
+let C1 = {}, C2 = {}, ok1 = false, ok2 = false;
+const setStatus = (t, c) => { const s = $('status'); s.textContent = t; s.style.color = c || '#607080'; };
+async function cargarP1() {
+  try { ok1 = false; C1 = await apiGet('cache1'); ok1 = true; setStatus(`✓ Caché operativo: ${Object.keys(C1).length.toLocaleString()} registros`, '#2e7d32'); buscarP1(); }
+  catch (e) { setStatus('✗ Error en caché operativo: ' + e.message, '#c62828'); toast('Error caché operativo: ' + e.message, true); }
+}
+async function cargarP2() {
+  try { ok2 = false; C2 = await apiGet('cache2'); ok2 = true; toast(`Caché empresarial: ${Object.keys(C2).length.toLocaleString()} registros`); buscarP2(); }
+  catch (e) { toast('Error caché empresarial: ' + e.message, true); }
+}
+$('p1upd').onclick = async () => { setStatus('⏳ Actualizando...'); await cargarP1(); };
+$('p2upd').onclick = cargarP2;
+
+/* ====== PESTAÑA OPERATIVO ====== */
+const clearP1 = () => { F1.forEach(([k]) => $('p1' + k).value = ''); $('p1tipo').value = ''; };
+function buscarP1() {
+  const dni = val('p1doc');
+  if (!dni) { clearP1(); return; }
+  if (!ok1) return;
+  if ([7, 8, 11].includes(dni.length) && C1[dni]) {
+    const r = C1[dni];
+    $('p1tipo').value = r[0];
+    setv('p1nombre', r[1]); setv('p1celular', r[2]); setv('p1correo', r[3], true); setv('p1direccion', r[4]);
+    setv('p1departamento', r[5]); setv('p1provincia', r[6]); setv('p1distrito', r[7]);
+  }
+}
+$('p1doc').addEventListener('input', buscarP1);
+const clearAllP1 = () => { $('p1doc').value = ''; clearP1(); $('p1asesor').value = ''; };
+
+$('p1reg').onclick = async () => {
+  const dni = val('p1doc');
+  if (!dni) { toast('El DNI/RUC es obligatorio', true); return; }
+  const fila = [dni, val('p1tipo'), val('p1nombre'), val('p1celular'), val('p1correo'), val('p1direccion'),
+    val('p1departamento'), val('p1provincia'), val('p1distrito'), val('p1coord'), val('p1asesor'), ahora()];
+  const b = $('p1reg'); b.disabled = true; b.textContent = 'Guardando...';
+  try { await apiPost(fila); toast('✓ Venta registrada'); clearAllP1(); }
+  catch (e) { toast('Error: ' + e.message, true); }
+  b.disabled = false; b.textContent = 'Registrar (venta)';
+};
+$('p1res').onclick = async () => {
+  await copiar(`VENTA REALIZADA POR OPERATIVO TECSYCOM
+FECHA DE REGISTRO: ${ahora()}
+DOCUMENTO: ${$('p1doc').value}
+TIPO DE DOCUMENTO: ${$('p1tipo').value}
+NOMBRE DEL CLIENTE: ${$('p1nombre').value}
+CELULAR: ${$('p1celular').value}
+CORREO: ${$('p1correo').value}
+DIRECCION: ${$('p1direccion').value}
+DEPARTAMENTO: ${$('p1departamento').value}
+PROVINCIA: ${$('p1provincia').value}
+DISTRITO: ${$('p1distrito').value}
+COORDX/Y: ${$('p1coord').value}
+ASESOR: ${$('p1asesor').value}`);
+  toast('Resumen copiado al portapapeles');
+};
+
+/* ====== PESTAÑA EMPRESARIAL ====== */
+const clearP2 = () => F2.forEach(([k]) => $('p2' + k).value = '');
+function colores() {
+  const f1 = $('p2fase1'), f2 = $('p2fase2'), v1 = f1.value.trim().toUpperCase(), v2 = f2.value.trim().toUpperCase();
+  const set = (el, bg, fg) => { el.style.background = bg; el.style.color = fg; };
+  v1 === 'VALIDADO' ? set(f1, 'green', 'white') : set(f1, 'white', 'black');
+  if (v2 === 'FINALIZADO') set(f2, '#D3D3D3', 'blue');
+  else if (v2 === 'PROGRAMADO') set(f2, 'black', 'white');
+  else if (v2 === 'AUSENTE' || v2 === 'CANCELADO') set(f2, '#800000', 'white');
+  else if (v2 === 'PENDIENTE') set(f2, 'yellow', 'black');
+  else set(f2, 'white', 'black');
+}
+$('p2fase1').addEventListener('input', colores); $('p2fase2').addEventListener('input', colores);
+function buscarP2() {
+  const doc = val('p2doc');
+  if (!doc) { clearP2(); colores(); return; }
+  if (!ok2) return;
+  if ([7, 8, 11].includes(doc.length) && C2[doc]) {
+    const r = C2[doc];
+    ['cliente','celular','direccion','vendedor','fase1','fase2','motivo','detalle','fval','fprog'].forEach((k, i) => setv('p2' + k, r[i]));
+    colores();
+  }
+}
+$('p2doc').addEventListener('input', buscarP2);
+$('p2clr').onclick = () => { $('p2doc').value = ''; clearP2(); colores(); };
+$('p2res').onclick = async () => {
+  await copiar(`VENTA EMPRESARIAL TECSYCOM
+FECHA DE REGISTRO: ${ahora()}
+DOC/RUC: ${$('p2doc').value}
+CLIENTE: ${$('p2cliente').value}
+CELULAR: ${$('p2celular').value}
+DIRECCION: ${$('p2direccion').value}
+VENDEDOR: ${$('p2vendedor').value}
+1RA FASE: ${$('p2fase1').value}
+2DA FASE: ${$('p2fase2').value}
+MOTIVO: ${$('p2motivo').value}
+DETALLE DE LA CANCELACION: ${$('p2detalle').value}
+FECHA VALIDACIÓN: ${$('p2fval').value}
+FECHA DE PROGRAMACION: ${$('p2fprog').value}`);
+  toast('Resumen empresarial copiado al portapapeles');
+};
+if (P2_REGISTRAR) {           // misma fila que guardar_datos_p2() de la app Python (hoja REGISTRO)
+  $('p2reg').hidden = false;
+  $('p2reg').onclick = async () => {
+    const doc = val('p2doc');
+    if (!doc) { toast('El DOC/RUC es obligatorio', true); return; }
+    const fh = ahora();
+    const extra = `Cliente: ${$('p2cliente').value} | F1: ${$('p2fase1').value} | F2: ${$('p2fase2').value} | Val: ${$('p2fval').value}`;
+    const fila = [doc, 'EMPRESARIAL', val('p2cliente'), val('p2celular'), val('p2direccion'), '', val('p2vendedor'),
+      val('p2fase1'), val('p2fase2'), val('p2motivo'), val('p2detalle'), val('p2fval'), val('p2fprog'), `${fh} | ${extra}`];
+    try { await apiPost(fila); toast('✓ Venta empresarial registrada'); $('p2clr').click(); }
+    catch (e) { toast('Error: ' + e.message, true); }
+  };
+}
+
+/* ====== MANTENER ACTIVO (la web no puede fijar la ventana; mantiene la pantalla encendida) ====== */
+let wake = null;
+document.querySelectorAll('.wake').forEach(b => b.onclick = async () => {
+  if (!('wakeLock' in navigator)) { toast('Tu navegador no permite mantener la pantalla activa', true); return; }
+  try {
+    if (wake) { await wake.release(); wake = null; document.querySelectorAll('.wake').forEach(x => x.classList.remove('act')); toast('Pantalla activa: desactivado'); }
+    else { wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release', () => wake = null);
+      document.querySelectorAll('.wake').forEach(x => x.classList.add('act')); toast('Pantalla activa: la pantalla no se apagará'); }
+  } catch (e) { toast('No se pudo activar: ' + e.message, true); }
+});
+document.addEventListener('visibilitychange', async () => {
+  if (document.visibilityState === 'visible' && document.querySelector('.wake.act') && !wake) {
+    try { wake = await navigator.wakeLock.request('screen'); } catch (e) {} }
+});
+
+/* ====== INICIO: cargar ambas cachés en segundo plano ====== */
+if (API_URL.startsWith('PEGA_')) setStatus('⚠ Falta configurar API_URL en index.html', '#c62828');
+else { cargarP1(); cargarP2(); }
+</script>
+</body>
+</html>
